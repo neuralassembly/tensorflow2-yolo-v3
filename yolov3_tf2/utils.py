@@ -107,9 +107,17 @@ def draw_outputs(img, outputs, class_names):
         x1y1 = tuple((boxes[i][0:2].numpy() * wh).astype(np.int32))
         x2y2 = tuple((boxes[i][2:4].numpy() * wh).astype(np.int32))
         img = cv2.rectangle(img, x1y1, x2y2, (255, 0, 0), 2)
-        img = cv2.putText(img, '{} {:.4f}'.format(
-            class_names[int(classes[i])], objectness[i]),
-            x1y1, cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 255, 255), 1)
+        #omitted displaying objectness[i]
+        (test_width, text_height), baseline = cv2.getTextSize(class_names[int(classes[i])],
+                                                              cv2.FONT_HERSHEY_SIMPLEX,
+                                                              0.75, 1)
+        img = cv2.rectangle(img,
+                      x1y1,
+                      (x1y1[0] + test_width, x1y1[1] - text_height - baseline),
+                      (255, 0, 0),
+                      thickness=cv2.FILLED)
+        img = cv2.putText(img, class_names[int(classes[i])],
+            (x1y1[0], x1y1[1] - baseline), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 255, 255), 1)
     return img
 
 
